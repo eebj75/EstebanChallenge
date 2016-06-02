@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -19,16 +21,29 @@ namespace HPChallenge
 
         protected void GetTopScores()
         {
-            int count = int.Parse(txtCount.Text);
-            ScoreBoard sb = new ScoreBoard();
-            List<Player> playerList = new List<Player>();
-            playerList=  sb.GetTopPlayers(count);
-
-            if (count > 0)
+            using (var client = new HttpClient())
             {
-                gvTopScores.PageSize = count;
-                gvTopScores.DataSource = playerList;
-                gvTopScores.DataBind();
+                client.BaseAddress = new Uri("http://localhost:58257/");
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                if (string.IsNullOrEmpty(txtCount.Text))
+                    txtCount.Text = "10";
+
+                int count = int.Parse(txtCount.Text);
+                HttpResponseMessage response = client.GetAsync("api/game/" + count).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var dataObjects = response.Content.ReadAsAsync<IEnumerable<Player>>().Result;
+
+                    if (count > 0)
+                    {
+                        gvTopScores.PageSize = count;
+                        gvTopScores.DataSource = dataObjects;
+                        gvTopScores.DataBind();
+                    }
+                }
             }
         }
 
@@ -109,7 +124,52 @@ namespace HPChallenge
 
                     while ((line = sr.ReadLine()) != null)
                     {
-                        System.Console.WriteLine(line);
+                        line = line.Trim();
+                        if (line.Length > 20)
+                        {
+                            line = line.Replace(@"""", string.Empty);
+                            line = line.Replace("[", string.Empty);
+                            line = line.Replace("]", string.Empty);
+                            string[] arrPlayer = line.Split(',');
+
+                            if (arrPlayer.Length >= 4)
+                            {
+                                ScoreBoard sb = new ScoreBoard();
+                                int winner = sb.GetWinner(arrPlayer[1], arrPlayer[3]);
+                                Player player1 = new Player();
+                                Player player2 = new Player();
+
+                                if (winner == 1)
+                                {
+                                    player1.playerName = arrPlayer[0];
+                                    player1.points = 3;
+                                    sb.InsertScoreBoard(player1);
+
+                                    player2.playerName = arrPlayer[2];
+                                    player2.points = 1;
+                                    sb.InsertScoreBoard(player2);
+
+                                }
+                                else if (winner == 2)
+                                {
+                                    player1.playerName = arrPlayer[0];
+                                    player1.points = 1;
+                                    sb.InsertScoreBoard(player1);
+
+                                    player2.playerName = arrPlayer[2];
+                                    player2.points = 3;
+                                    sb.InsertScoreBoard(player2);
+                                }
+                                else
+                                {
+                                    Response.Write("Could not get a winner.");
+                                }
+                            }
+                            else
+                            {
+                                Response.Write("At least 2 players are required.");
+                            }
+                        }
                     }
                 }
             }

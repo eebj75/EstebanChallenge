@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+﻿using System.Collections.Generic;
+using HPChallenge.Models;
 using System.Web.Http;
 
 namespace HPChallenge.Controllers
@@ -12,13 +9,14 @@ namespace HPChallenge.Controllers
         // GET: api/Game
         public IEnumerable<string> Get()
         {
-            return new string[] { "value1", "value2" };
+            return new string[] { "valueAA1", "valueBB2" };
         }
 
         // GET: api/Game/5
-        public string Get(int id)
+        public List<Player> Get(int id)
         {
-            return "value";
+            ScoreBoard sb = new ScoreBoard();
+            return sb.GetTopPlayers(id);
         }
 
         // POST: api/Game
