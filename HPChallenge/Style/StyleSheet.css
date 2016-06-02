@@ -1,0 +1,131 @@
+﻿body {
+}
+
+#header {
+    background-color:cadetblue;
+    color:white;
+    text-align:center;
+    padding:5px;
+}
+#nav {
+    line-height:30px;
+    background-color:#eeeeee;
+    height:300px;
+    width:100px;
+    float:left;
+    padding:5px; 
+}
+#section {
+    width:350px;
+    float:left;
+    padding:10px; 
+}
+#footer {
+    background-color:cadetblue;
+    color:white;
+    clear:both;
+    text-align:center;
+    padding:5px; 
+}
+
+.NetGridDiv
+{
+    width: 100%;
+    border: solid 2px black;
+    min-width: 80%;
+}
+
+.header
+{
+    background-color: #646464;
+    font-family: Arial;
+    color: white;
+    border: none 0px transparent;
+    height: 25px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.rows
+{
+    background-color: #fff;
+    font-family: Arial;
+    font-size: 14px;
+    color: #000;
+    min-height: 25px;
+    text-align: left;
+    border: none 0px transparent;
+}
+
+.rows:hover
+
+{
+    background-color: #ff8000;
+    font-family: Arial;
+    color: black;
+    text-align: left;
+}
+
+.selectedrow
+{
+    background-color: #ff8000;
+    font-family: Arial;
+    color: black;
+    font-weight: bold;
+    text-align: left;
+}
+
+.NetGridDiv a /** FOR THE PAGING ICONS  **/
+
+{
+    background-color: Transparent;
+    padding: 5px 5px 5px 5px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.NetGridDiv a:hover /** FOR THE PAGING ICONS  HOVER STYLES**/
+{
+    background-color: #ff8000;
+    color: black;
+}
+
+.NetGridDiv span /** FOR THE PAGING ICONS CURRENT PAGE INDICATOR **/
+{
+    background-color: #c9c9c9;
+    color: red;
+    padding: 5px 5px 5px 5px;
+}
+
+.pager
+{
+    background-color: #646464;
+    font-family: Arial;
+    color: White;
+    height: 30px;
+    text-align: left;
+}
+
+.NetGridDiv td
+{
+    padding: 5px;
+}
+
+.NetGridDiv th
+{
+    padding: 5px;
+}
+
+.EditColumn a
+{
+	color:blue;
+	text-decoration: underline;
+}
+
+.EditColumn a:hover
+{
+	color:blue;
+	text-decoration: underline;
+}
+

@@ -1,0 +1,36 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site1.master.cs" Inherits="HPChallenge.Site1" %>
+
+<!DOCTYPE html>
+<link rel="stylesheet" href="style/StyleSheet.css"/>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    
+<div id="header">
+<h1>HP Challenge</h1>
+</div>
+    
+<div id="nav">
+<a href="Default.aspx">Main Page</a><br>
+<a href="Contact.aspx">Contact</a><br>
+<a href="Resources.aspx">Resources</a><br>
+<a href="Settings.aspx">Settings</a><br>
+<a href="About.aspx">About Us</a><br>
+</div>
+    <form id="form1" runat="server">
+    <div>
+        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+        
+        </asp:ContentPlaceHolder>
+    </div>
+    </form>
+    
+<div id="footer">
+Copyright © 2016
+</div>
+</body>
+</html>
