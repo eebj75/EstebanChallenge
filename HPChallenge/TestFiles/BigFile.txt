@@ -1,0 +1,34 @@
+[   
+   [     
+         [ ["Armando", "P"], ["Dave", "S"]    ],     
+         [ ["Richard", "R"], ["Michael", "S"] ], 
+   ],   
+   [ 
+         [ ["Allen", "S"], ["Omer", "P"]  ],     
+         [ ["John", "R"], ["Robert", "P"] ]    
+   ],
+   [     
+         [ ["Pedro", "R"], ["Dave", "S"]    ],     
+         [ ["Richard", "R"], ["Rafa", "S"] ], 
+   ],   
+   [ 
+         [ ["Maria", "S"], ["Omer", "S"]  ],     
+         [ ["John", "R"], ["Robert", "P"] ]    
+   ],
+   [     
+         [ ["Julio", "P"], ["Dave", "S"]    ],     
+         [ ["Richard", "R"], ["Michael", "P"] ], 
+   ],   
+   [ 
+         [ ["Viviana", "S"], ["Omer", "P"]  ],     
+         [ ["John", "P"], ["Javier", "P"] ]    
+   ],
+   [     
+         [ ["Andres", "P"], ["Rogelio", "S"]    ],     
+         [ ["Richard", "R"], ["Michael", "P"] ], 
+   ],   
+   [ 
+         [ ["Camilo", "S"], ["Guido", "P"]  ],     
+         [ ["Diego", "P"], ["Ivan", "P"] ]    
+   ] 
+] 

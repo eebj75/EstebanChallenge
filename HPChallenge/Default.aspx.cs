@@ -8,6 +8,9 @@ using System.Net.Http.Headers;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System;
+using System.Collections.Specialized;
+using System.Net;
 
 namespace HPChallenge
 {
@@ -16,7 +19,8 @@ namespace HPChallenge
 
         protected void Page_Load(object sender, EventArgs e)
         {
-           
+            paragraphMessage.InnerText = "";
+            InsertScoreBoard();
         }
 
         protected void GetTopScores()
@@ -47,49 +51,6 @@ namespace HPChallenge
             }
         }
 
-        protected void GetWinner()
-        {
-            ScoreBoard sb = new ScoreBoard();
-            Player player1 = new Player();
-            Player player2 = new Player();
-
-
-            var winner = 0;
-
-            winner = sb.GetWinner("R", "S");
-
-            if (winner == 1)
-            {
-                //player1 wins
-
-                player1.playerName = "Juan";
-                player1.points = 3;
-
-                player2.playerName = "Ernesto";
-                player2.points = 1;
-
-                sb.InsertScoreBoard(player1);
-                sb.InsertScoreBoard(player2);
-            }
-            else if (winner == 2)
-            {
-                //player2 wins
-
-                player1.playerName = "Juan";
-                player1.points = 1;
-
-                player2.playerName = "Ernesto";
-                player2.points = 3;
-
-                sb.InsertScoreBoard(player1);
-                sb.InsertScoreBoard(player2);
-            }
-            else
-            {
-                Response.Write("Cannot Determine Winner.");
-            }
-        }
-
         protected void btnGetTopScores_Click(object sender, EventArgs e)
         {
             GetTopScores();
@@ -106,22 +67,37 @@ namespace HPChallenge
 
                     FileUploadControl.SaveAs(FullPath);
                     
-                    ProcessFile(FullPath);
+                    if (ProcessFile(FullPath))
+                    {
+                        paragraphMessage.InnerText = "upload completed";
+                    }
                 }
                 catch (Exception ex)
                 {
+                    paragraphMessage.InnerText = "Error processing file. " + ex.Message;
                 }
             }
         }
 
-        private void ProcessFile(string file)
+        private bool isValidStrategy(string strategy)
+        {
+            if (strategy == "P" || strategy == "R" || strategy == "S")
+            {
+                return true;
+            }
+            else
+                return false;
+        }
+
+        private bool ProcessFile(string file)
         {
             try
-            {   
+            {
                 using (StreamReader sr = new StreamReader(file))
                 {
                     string line = "";
-
+                    List<Player> listA = new List<Player>();
+                   
                     while ((line = sr.ReadLine()) != null)
                     {
                         line = line.Trim();
@@ -129,54 +105,144 @@ namespace HPChallenge
                         {
                             line = line.Replace(@"""", string.Empty);
                             line = line.Replace("[", string.Empty);
-                            line = line.Replace("]", string.Empty);
+                            line = line.Replace("]", string.Empty).Trim();
                             string[] arrPlayer = line.Split(',');
 
                             if (arrPlayer.Length >= 4)
                             {
-                                ScoreBoard sb = new ScoreBoard();
-                                int winner = sb.GetWinner(arrPlayer[1], arrPlayer[3]);
                                 Player player1 = new Player();
                                 Player player2 = new Player();
 
-                                if (winner == 1)
+                                var player1Strategy = arrPlayer[1].Trim().ToUpper();
+                                var player2Strategy = arrPlayer[3].Trim().ToUpper();
+
+                                if (isValidStrategy(player1Strategy) && isValidStrategy(player2Strategy))
                                 {
                                     player1.playerName = arrPlayer[0];
-                                    player1.points = 3;
-                                    sb.InsertScoreBoard(player1);
-
+                                    player1.strategy = player1Strategy;
+                                    listA.Add(player1);
                                     player2.playerName = arrPlayer[2];
-                                    player2.points = 1;
-                                    sb.InsertScoreBoard(player2);
-
-                                }
-                                else if (winner == 2)
-                                {
-                                    player1.playerName = arrPlayer[0];
-                                    player1.points = 1;
-                                    sb.InsertScoreBoard(player1);
-
-                                    player2.playerName = arrPlayer[2];
-                                    player2.points = 3;
-                                    sb.InsertScoreBoard(player2);
+                                    player2.strategy = player2Strategy;
+                                    listA.Add(player2);
                                 }
                                 else
                                 {
-                                    Response.Write("Could not get a winner.");
-                                }
+                                    paragraphMessage.InnerText = ("Invalid Strategy.");
+                                    return false;
+                                }                          
                             }
                             else
                             {
-                                Response.Write("At least 2 players are required.");
+                                paragraphMessage.InnerText = "At least 2 players are required.";
+                                return false;
                             }
                         }
                     }
+
+                    List<Player> listB = new List<Player>();
+
+                    while (listA.Count != 0 || listB.Count != 0)
+                    {
+                        ScoreBoard sb = new ScoreBoard();
+                        int winner = sb.GetWinner(listA[0].strategy, listA[1].strategy);
+
+                        if (winner == 1)
+                        {
+                            if (listA.Count == 2 && listB.Count == 0)
+                            {
+                                listA[0].points = 3;
+                                sb.InsertScoreBoard(listA[0]);
+                                listA[1].points = 1;
+                                sb.InsertScoreBoard(listA[1]);
+                                break;
+                            }
+                            else
+                            {
+                                listB.Add(listA[0]);
+                                listA.RemoveAt(1);
+                                listA.RemoveAt(0);
+                            }
+                        }
+                        else if (winner == 2)
+                        {
+                            if (listA.Count == 2 && listB.Count == 0)
+                            {
+                                listA[1].points = 3;
+                                sb.InsertScoreBoard(listA[1]);
+                                listA[0].points = 1;
+                                sb.InsertScoreBoard(listA[0]);
+                                break;
+                            }
+                            else
+                            { 
+                                listB.Add(listA[1]);
+                                listA.RemoveAt(1);
+                                listA.RemoveAt(0);
+                            }
+                        }
+
+                        if (listA.Count == 0)
+                        {
+                            var listBdata = from item in listB
+                                           select item;
+
+                            listA.AddRange(listBdata);
+
+                            listB.Clear();
+                        }
+                    }   
                 }
+                
             }
             catch (Exception e)
             {
-                Console.WriteLine("The file could not be read:");
-                Console.WriteLine(e.Message);
+                paragraphMessage.InnerText = ("The file could not be read:") + (e.Message);
+            }
+            return true;
+        }
+
+        private void InsertScoreBoard()
+        {
+            Player player = new Player();
+
+            StringContent content = new StringContent("name:juan");
+
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("http://localhost:58257/");
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.PostAsync("http://localhost:58257/api/game/post", content);
+              
+                //HttpResponseMessage response = client.PostAsync("api/game/post/" , content ).Result;
+               
+            }
+            //string DATA = @"{""object"":{""name"":""Name""}}";
+
+            //HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://localhost:58257/api/game");
+            //request.Method = "POST";
+            //request.ContentType = "application/json";
+            //request.ContentLength = DATA.Length;
+            //using (Stream webStream = request.GetRequestStream())
+
+            //using (StreamWriter requestWriter = new StreamWriter(webStream, System.Text.Encoding.ASCII))
+            //{
+            //    requestWriter.Write(DATA);
+            //}
+        }
+
+        protected void gvTopScores_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.Cells.Count > 1)
+            {
+                if (e.Row.RowType == DataControlRowType.Header)
+                {
+                    e.Row.Cells[0].Text = "Player Name";
+                    e.Row.Cells[1].Text = "Points";
+                }
+
+                e.Row.Cells[2].Visible = false;
             }
         }
     }

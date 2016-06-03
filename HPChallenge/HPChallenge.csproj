@@ -91,6 +91,7 @@
     <Content Include="TestFiles\HPTestFile3.txt" />
     <Content Include="TestFiles\HPTestFile2.txt" />
     <Content Include="TestFiles\HPTestFile1.txt" />
+    <Content Include="TestFiles\SmallFile.txt" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -111,6 +112,7 @@
     </Compile>
     <Compile Include="Controllers\GameController.cs" />
     <Compile Include="Controllers\TestController.cs" />
+    <Compile Include="DataContractJsonSerializer.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

@@ -18,6 +18,7 @@
          <asp:label runat="server" text="Upload File "></asp:label>
          <asp:FileUpload id="FileUploadControl" runat="server" />
          <asp:button runat="server" id="btnUploadFile" text="Upload" OnClick="btnUploadFile_Click" />
+         <p id="paragraphMessage" runat="server" style="color:red"></p>
     </div>
     <br /><br />
     <asp:label runat="server" text="Get top "></asp:label>
@@ -25,7 +26,7 @@
     <asp:button runat="server" id="btnGetTopScores" text="Get Data" OnClick="btnGetTopScores_Click" />
     <br /><br />
     <div id="divTopScores" runat="server">
-        <asp:gridview runat="server" id="gvTopScores" CellPadding="4" ForeColor="#333333" GridLines="None">
+        <asp:gridview runat="server" id="gvTopScores" CellPadding="4" ForeColor="#333333" GridLines="None" OnRowDataBound="gvTopScores_RowDataBound">
             <AlternatingRowStyle BackColor="White" />
             <EditRowStyle BackColor="#2461BF" />
             <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />

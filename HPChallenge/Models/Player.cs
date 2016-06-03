@@ -9,6 +9,7 @@ namespace HPChallenge.Models
     {
         public string playerName { get; set; }
         public int points { get; set; }
+        public string strategy { get; set; }
 
         public Player()
         {

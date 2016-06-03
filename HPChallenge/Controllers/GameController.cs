@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using HPChallenge.Models;
 using System.Web.Http;
+using System.Net.Http;
 
 namespace HPChallenge.Controllers
 {
@@ -19,9 +20,30 @@ namespace HPChallenge.Controllers
             return sb.GetTopPlayers(id);
         }
 
-        // POST: api/Game
+        public HttpResponseMessage PostPlayer(string player)
+        {
+            if (ModelState.IsValid)
+            {
+                //insert in DB
+                HttpResponseMessage response = Request.CreateResponse(System.Net.HttpStatusCode.Created, player);
+                response.Headers.Location = new System.Uri(Url.Link("DefaultApi", new { id = player }));
+                return response;
+            }
+            else
+            {
+                return Request.CreateErrorResponse(System.Net.HttpStatusCode.BadRequest,ModelState);
+            }
+        }
+
+        //// POST: api/Game
         public void Post([FromBody]string value)
         {
+            if (ModelState.IsValid)
+            {
+                //insert in DB
+                HttpResponseMessage response = Request.CreateResponse(System.Net.HttpStatusCode.Created, value);
+                response.Headers.Location = new System.Uri(Url.Link("DefaultApi", new { id = value }));
+            }
         }
 
         // PUT: api/Game/5
